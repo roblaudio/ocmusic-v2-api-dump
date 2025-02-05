@@ -30,20 +30,25 @@ const excludedNames = cfg.audios.exclude
   .concat(excludedNamesNoWhitespace)
   .map((v) => v.toLowerCase());
 
-const newAudios = dump.audios
-  .filter(({ name }) => {
-    console.log(name.toLowerCase());
-    return excludedNames.includes(name.toLowerCase());
-  })
-  .filter(({ name }) => {
-    console.log(name.replaceAll(/\s+/g, "").toLowerCase());
-    return excludedNames.includes(name.replaceAll(/\s+/g, "").toLowerCase());
-  })
-  .filter(({ id }) => cfg.audios.exclude_ids.includes(id));
+const newAudios = dump.audios.filter(({ name, id }) => {
+  if (cfg.audios.exclude_ids.includes(id)) return false;
+  for (const e of excludedNames) {
+    const i = e.indexOf(name);
+    if (i > -1) console.log(i, name);
+    if (name.toLowerCase().includes(e)) {
+      console.log(`BEGONE ${name}`);
+      return false;
+    }
+    if (name.toLowerCase().replaceAll(/\s+/g, "").includes(e)) {
+      console.log(`BEGONE ${name}`);
+      return false;
+    }
+  }
+
+  return true;
+});
 
 if (newAudios === dump.audios) throw "oops";
 dump.audios = newAudios;
 
-console.log(excludedNames);
-
-Deno.writeTextFile(`./test.json`, JSON.stringify(dump));
+Deno.writeTextFile(`./wow.json`, JSON.stringify(dump));
