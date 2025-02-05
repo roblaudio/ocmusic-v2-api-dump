@@ -1,0 +1,15 @@
+[audios]
+
+# List of audio names that should be nuked from the dump
+# TODO: should probably extend this more so others dont dmca us but tocav got
+# confirmed in etoh so i have to work on dat
+exclude = [
+    "Hungry4Adventure",
+    "Super Bomb Survival",
+    "SkyTheFloof",
+    "Find Everything",
+    "Super Doomspire",
+]
+
+# IDs to exclude manually
+exclude_ids = []

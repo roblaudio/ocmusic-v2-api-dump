@@ -1,3 +1,8 @@
-# api-archive
+# Obby Creator Music API Dump v2
 
-This repo contains a single file, and that is `data-archive.txt` (and also `data-archive-v2.txt`, but ignore that one). It contains frozen data from the OCM api, which the browser Roblox game uses
+API dump used by the Obby Creator Music Browser since 2022.
+
+You should probably use <https://github.com/roblaudio/ocmusic-api-dumb>.
+
+The repository was forked from our old organization so we can implement manual
+excluding of audios.

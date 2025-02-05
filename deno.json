@@ -1,0 +1,9 @@
+{
+    "tasks": {
+        "process": "deno run --watch process.ts"
+    },
+    "imports": {
+        "@std/json": "jsr:@std/json@^1.0.1",
+        "@std/toml": "jsr:@std/toml@^1.0.2"
+    }
+}
