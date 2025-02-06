@@ -1,6 +1,8 @@
 {
     "tasks": {
-        "process": "deno run --watch process.ts"
+        "process": "deno run --allow-read --allow-write scripts/process.ts",
+        "archive": "deno run --allow-read --allow-write --allow-net --allow-env --env-file=.env scripts/archive.ts",
+        "find": "deno run --allow-read scripts/find.ts"
     },
     "imports": {
         "@std/json": "jsr:@std/json@^1.0.1",

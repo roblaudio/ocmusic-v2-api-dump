@@ -3,12 +3,15 @@
 # List of audio names that should be nuked from the dump
 # TODO: should probably extend this more so others dont dmca us but tocav got
 # confirmed in etoh so i have to work on dat
+# only checks for letters, numbers & underscores
 exclude = [
-    "Hungry4Adventure",
-    "Super Bomb Survival",
+    # From SkyTheFloof and https://www.youtube.com/@SkyTheFloof/videos
     "SkyTheFloof",
-    "Find Everything",
+    "Find Ever",
+    "Hungry4Adventure",
+    "Super Bomb Surv",
     "Super Doomspire",
+    "Survive The Disasters"
 ]
 
 # IDs to exclude manually

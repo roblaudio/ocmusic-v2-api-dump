@@ -17,30 +17,30 @@ interface Config {
 }
 
 const CONFIG_FILE = await Deno.readTextFile(`${Deno.cwd()}/config.toml`);
+const ORIGINAL_PATH = `${Deno.cwd()}/original-archive.json`;
 const DUMP_PATH = `${Deno.cwd()}/dump.json`;
+const EXCLUDED_PATH = `${Deno.cwd()}/excluded.txt`;
 
 const cfg: Config = parseToml(CONFIG_FILE) as never;
-const dump: Dump = JSON.parse(await Deno.readTextFile(DUMP_PATH)) as never;
+const dump: Dump = JSON.parse(await Deno.readTextFile(ORIGINAL_PATH)) as never;
 
-const excludedNamesNoWhitespace = cfg.audios.exclude.map((v) =>
-  v.replaceAll(/\s+/g, ""),
-);
+const filterName = (name: string) => name.toLowerCase().replaceAll(/\W+/g, "");
 
-const excludedNames = cfg.audios.exclude
-  .concat(excludedNamesNoWhitespace)
-  .map((v) => v.toLowerCase());
+const excludedNames = cfg.audios.exclude.map(filterName);
+const excludedIds = cfg.audios.exclude_ids;
+const excluded: number[] = [];
 
 const newAudios = dump.audios.filter(({ name, id }) => {
-  if (cfg.audios.exclude_ids.includes(id)) return false;
+  if (excludedIds.includes(id)) {
+    excluded.push(id);
+    return false;
+  }
+
+  const filteredName = filterName(name);
   for (const e of excludedNames) {
-    const i = e.indexOf(name);
-    if (i > -1) console.log(i, name);
-    if (name.toLowerCase().includes(e)) {
-      console.log(`BEGONE ${name}`);
-      return false;
-    }
-    if (name.toLowerCase().replaceAll(/\s+/g, "").includes(e)) {
-      console.log(`BEGONE ${name}`);
+    if (filteredName.includes(e)) {
+      console.log(`BEGONE ${name} (rule: "${e}") — ${id}`);
+      excluded.push(id);
       return false;
     }
   }
@@ -48,7 +48,10 @@ const newAudios = dump.audios.filter(({ name, id }) => {
   return true;
 });
 
-if (newAudios === dump.audios) throw "oops";
+if (newAudios.length === dump.audios.length) throw "all done 🎉";
 dump.audios = newAudios;
 
-Deno.writeTextFile(`./wow.json`, JSON.stringify(dump));
+console.log(`Excluded ${excluded.length} audio(s)`);
+
+Deno.writeTextFile(DUMP_PATH, JSON.stringify(dump));
+Deno.writeTextFile(EXCLUDED_PATH, excluded.join("\n"));
